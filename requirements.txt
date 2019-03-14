@@ -1,0 +1,10 @@
+pytorch
+numpy
+pandas
+scipy
+resampy
+six
+pickle
+h5py
+librosa
+
