@@ -13,7 +13,7 @@ from utils import vggish_input
 
 imp.reload(vggish_input)
 
-class BirdSoundsDataset(Dataset):
+class MelSpecDataset(Dataset):
     '''
     A subclass of pytorch's Dataset class to handle bird sounds data as processed
     by the xeno-canto crawler class.
@@ -24,8 +24,8 @@ class BirdSoundsDataset(Dataset):
         initializes the Data set to a root directory data_root
         '''
         print('initialization')
-        self.root = params.data_root
-        self.max_size = params.n_max # max #instances / class loaded into ram
+        self.root = params.mel_spec_root
+        self.max_size = params.n_max # max #instances / class used for training
         self.labels = []
         self.n_instances = []
         self.df = pd.DataFrame(data={'label':[], 'file':[], 'path':[]})
@@ -38,7 +38,7 @@ class BirdSoundsDataset(Dataset):
         vggish_input and respective labels arrays and paths in self.df dataframe.
         '''
         label_list = os.listdir(self.root)
-        print(label_list)
+        label_list.sort()
         try:
             label_list.remove('.DS_Store')
         except:
@@ -50,7 +50,7 @@ class BirdSoundsDataset(Dataset):
             if self.max_size is not None:
                 paths = paths[:self.max_size]
             self.n_instances.append(len(paths))
-            print('loading data for class {}: {} instances'.format(label, self.n_instances[-1]))
+            print('loading {} spectrograms for class {}'.format(self.n_instances[-1], label))
             arrays = [np.load(path) for path in paths]
             labels_for_files = [label]*len(arrays)
             label_df = pd.DataFrame(data={'label':labels_for_files, 'file':arrays, \

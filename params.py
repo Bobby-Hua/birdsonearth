@@ -17,24 +17,28 @@ class Params:
 
         # Data
         #TODO: add options for other formats
-        self.data_format = 'mp3'
+        self.data_format = 'wav'
 
         # Model
         self.n_bins = 64
         self.n_frames = 96
-        self.n_classes = 10
+        self.n_classes = 3
 
         # Training
-        self.n_epochs = 5
-        self.batch_size = 100
+        self.n_epochs = 100
+        self.batch_size = 512
         self.val_split = .2
-        self.data_root = '../data/largeBirds2_processed'
-        self.n_max = 100
+        self.data_root = 'data/full_urbansounds_restructured'
+        # if mel_spec_root directory exists it is used and preprocessing of data_root is skipped
+        # otherwise mel specs are computed from data_root
+        self.mel_spec_root = 'data/full_urbansounds_specs'
+        self.n_max = None
         self.weights = 'models/vggish_audioset_weights_without_fc2.h5'
 
         # model zoo
+        self.save_model = False
         self.model_zoo = 'models'
-        self.name = 'BirdDetector_10classes'
+        self.name = 'bla'
 
         # computing device, can be 'cuda:<GPU index>' or 'cpu'
-        self.device = 'cpu'
+        self.device = 'cuda:1'
