@@ -83,8 +83,8 @@ def predict(net, labels, files, params):
         out = net(data)
         pred = out.argmax(1).float()
         consensus = torch.round(torch.mean(pred))
-        consensus = int(consensus.cpu())
-        print('file {} sound like a {} to me'.format(i, labels[consensus]))
+        consensus = int(n.round(consensus.cpu().numpy()))
+        print('file {} sounds like a {} to me'.format(i, labels[consensus]))
         predictions.append(labels[consensus])
         os.remove(processed)
     return predictions
@@ -96,3 +96,12 @@ if __name__ == '__main__':
     params, files = prepare(params)
     net, labels = load_model_with(params)
     _ = predict(net, labels, files, params)
+
+#%%
+import numpy as np
+a = 1.54
+print(int(np.round(a)))
+probs = np.arange(1, 5).reshape((2, 2))
+print(probs)
+means = np.mean(probs, axis=0)
+print(means)

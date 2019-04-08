@@ -38,7 +38,7 @@ class Params:
         # model zoo
         self.save_model = False
         self.model_zoo = 'models'
-        self.name = 'bla'
+        self.name = 'birds'
 
         # computing device, can be 'cuda:<GPU index>' or 'cpu'
         self.device = 'cuda:1'

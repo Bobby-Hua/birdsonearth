@@ -81,7 +81,7 @@ for pytorch (`VGGish_convolutions.pt`).
 
 Currently, the following bird geni are supported:
 * Coloeus   -   daw     -   Dohle
-* Columba   -   dove    -   Taume
+* Columba   -   dove    -   Taube
 * Erithacus -   robin   -   Rotkehlchen
 * Garrulus  -   jay     -   Eichhäher
 * Parus     -   tit     -   Meise
