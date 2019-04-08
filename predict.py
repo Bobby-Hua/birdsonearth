@@ -5,6 +5,7 @@ import VGGish_model as m
 import torch
 import os
 import pickle
+import numpy as np
 
 from utils import vggish_input
 from utils import preprocessing as pre
@@ -31,7 +32,7 @@ def prepare(params):
     # reading in file names from terminal command
     print('working out options')
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'n:', ['epochs='])
+        opts, args = getopt.getopt(sys.argv[1:], 'n:d:', ['name=', 'device='])
     except getopt.GetoptError as err:
         print(err)
         sys.exit()
@@ -39,6 +40,8 @@ def prepare(params):
     for o, a in opts:
         if o in ('-n', '--name'):
             params.name = a
+        if o in ('-d', '--device'):
+            params.device = a
 
     files = None
     if args:
@@ -73,6 +76,7 @@ def predict(net, labels, files, params):
     print('starting inference')
     device = torch.device(params.device)
     predictions = []
+    probs = []
     for i, file in enumerate(files):
         processed = file.split('.')[0] + '_proc.wav'
         pre.preprocess(file, processed)
@@ -81,13 +85,18 @@ def predict(net, labels, files, params):
         data = data.to(device)
         net.to(device)
         out = net(data)
+        mean_probs = np.mean(out.detach().cpu().numpy(), axis=0)
         pred = out.argmax(1).float()
         consensus = torch.round(torch.mean(pred))
-        consensus = int(n.round(consensus.cpu().numpy()))
-        print('file {} sounds like a {} to me'.format(i, labels[consensus]))
+        consensus = int(np.round(consensus.cpu().numpy()))
+        print('file {} sound like a {} to me'.format(i, labels[consensus]))
+        print('my guesses are: ')
+        for i, label in enumerate(labels):
+            print('{0}: {1:.04f}'.format(label, mean_probs[i]))
         predictions.append(labels[consensus])
+        probs.append(mean_probs)
         os.remove(processed)
-    return predictions
+    return predictions, probs
 
 
 if __name__ == '__main__':
@@ -96,12 +105,3 @@ if __name__ == '__main__':
     params, files = prepare(params)
     net, labels = load_model_with(params)
     _ = predict(net, labels, files, params)
-
-#%%
-import numpy as np
-a = 1.54
-print(int(np.round(a)))
-probs = np.arange(1, 5).reshape((2, 2))
-print(probs)
-means = np.mean(probs, axis=0)
-print(means)

@@ -28,17 +28,17 @@ class Params:
         self.n_epochs = 100
         self.batch_size = 512
         self.val_split = .2
-        self.data_root = 'data/full_urbansounds_restructured'
+        self.data_root = '../data/full_urbansounds_restructured'
         # if mel_spec_root directory exists it is used and preprocessing of data_root is skipped
         # otherwise mel specs are computed from data_root
-        self.mel_spec_root = 'data/full_urbansounds_specs'
+        self.mel_spec_root = '../data/full_urbansounds_specs'
         self.n_max = None
         self.weights = 'models/vggish_audioset_weights_without_fc2.h5'
 
         # model zoo
-        self.save_model = False
+        self.save_model = True
         self.model_zoo = 'models'
-        self.name = 'birds'
+        self.name = 'urban'
 
         # computing device, can be 'cuda:<GPU index>' or 'cpu'
-        self.device = 'cuda:1'
+        self.device = 'cpu'

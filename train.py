@@ -71,7 +71,7 @@ def start_training_with(params):
     '''
     # setup
     device = torch.device(params.device)
-    n_classes = len(os.listdir(params.data_root))
+    n_classes = len(os.listdir(params.mel_spec_root))
     params.n_classes = n_classes
     print('setting up training for {} classes'.format(n_classes))
     dataset = d.MelSpecDataset(params)

@@ -1,4 +1,3 @@
-import vggish_input
 from scipy.io import wavfile
 from librosa.core import load
 from librosa.output import write_wav
@@ -6,6 +5,8 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy.misc
+
+from utils import vggish_input
 import imp
 imp.reload(vggish_input)
 
