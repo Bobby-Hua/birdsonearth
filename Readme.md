@@ -158,4 +158,4 @@ All code is licensed under the Apache2 license.
 
 We use the preprocessing procedure to generate spectrograms from the original
 [VGG_ish](https://github.com/tensorflow/models/tree/master/research/audioset) implementation. Our model implements the VGG_ish architecture in Pytorch.
-The h5py weights file for the convolutional part is taken from the Keras implementation by (DTaoo)[https://github.com/DTaoo/VGGish].
+The h5py weights file for the convolutional part is taken from the Keras implementation by [DTaoo](https://github.com/DTaoo/VGGish).
