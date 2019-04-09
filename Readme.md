@@ -1,6 +1,6 @@
 # Welcome to the Birds on Earth repository
 
-[![Open Demo in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/birds-on-mars/birdsonearth/blob/master/training_interface.ipynb)
+<!-- [![Open Demo in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/birds-on-mars/birdsonearth/blob/master/training_interface.ipynb) -->
 
 
 In this repository we provide PyTorch code and pretrained networks to
@@ -155,3 +155,7 @@ Please contact [Lucas](mailto:lucas@birdsonmars.com) or [Konrad](mailto:lucas@bi
 
 ## License
 All code is licensed under the Apache2 license.
+
+We use the preprocessing procedure to generate spectrograms from the original
+[VGG_ish](https://github.com/tensorflow/models/tree/master/research/audioset) implementation. Our model implements the VGG_ish architecture in Pytorch.
+The h5py weights file for the convolutional part is taken from the Keras implementation by (DTaoo)[https://github.com/DTaoo/VGGish].
