@@ -1,6 +1,6 @@
 # Welcome to the Birds on Earth repository
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/kheimpel/birdsonearth/blob/master/training_interface.ipynb)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/birds-on-mars/birdsonearth/blob/master/training_interface.ipynb)
 
 
 In this repository we provide PyTorch code and pretrained networks to
