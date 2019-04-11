@@ -151,7 +151,7 @@ input. It is a variation of the VGG network designed for image classification.
 For details refer to this [publication](https://arxiv.org/abs/1609.09430).
 
 ## Contact
-Please contact [Lucas](mailto:lucas@birdsonmars.com) or [Konrad](mailto:lucas@birdsonmars.com) for any questions.
+Please contact [Lucas](mailto:lucas@birdsonmars.com) or [Konrad](mailto:konrad@birdsonmars.com) for any questions.
 
 ## License
 All code is licensed under the Apache2 license.
