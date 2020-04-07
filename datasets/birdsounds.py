@@ -166,9 +166,11 @@ class Crawler:
         labels = self.df.gen.unique()
         if self.max is not None:
             counts = {i:0 for i in labels}
-        print('downloading a maxium of {} instances/class'.format(self.max))
+        print('downloading a maximum of {} instances/class'.format(self.max))
         for label in list(self.df.gen.unique()):
-            os.makedirs(os.path.join(self.root, label))
+            new_dir = os.path.join(self.root, label)
+            if not os.path.exists(new_dir):
+                os.makedirs(new_dir)
         for index, row in self.df.iterrows():
             label = str(row.gen)
             if self.max is not None:
@@ -178,15 +180,23 @@ class Crawler:
                     continue
             url = 'http:' + row.file
             path = os.path.join(self.root,label)
-            r = requests.get(url)
-            open(os.path.join(path, '{}.mp3'.format(str(row.id))), 'wb').write(r.content)
-            if self.convert_to_wav:
-                y, sr = load(os.path.join(path, '{}.mp3'.format(str(row.id))))
-                y *= 32768
-                y = y.astype(np.int16)
-                wavfile.write(os.path.join(path, '{}.wav'.format(str(row.id))), rate=22050, data=y)
-            if not self.keep_mp3:
-                os.remove(os.path.join(path, '{}.mp3'.format(str(row.id))))
+            mp3_file = os.path.join(path, '{}.mp3'.format(str(row.id)))
+            wav_file = os.path.join(path, '{}.wav'.format(str(row.id)))
+
+            if os.path.exists(wav_file) or os.path.exists(mp3_file):
+                print(f"skipping {url}. file already downloaded.")
+            else:
+                print(f"downloading {url} to {mp3_file}")
+                r = requests.get(url, timeout=60)
+                open(mp3_file, 'wb').write(r.content)
+
+                if self.convert_to_wav:
+                    y, sr = load(mp3_file)
+                    y *= 32768
+                    y = y.astype(np.int16)
+                    wavfile.write(wav_file, rate=22050, data=y)
+                if not self.keep_mp3:
+                    os.remove(mp3_file)
 
 
     def process_sounds(self):
@@ -232,16 +242,16 @@ class Crawler:
 
 if __name__ == '__main__':
 
-    queries = [{'genus':'Parus', 'quality':'q>:B'},
-                 {'genus':'Picoides', 'quality':'q>:B'},
-                 {'genus':'Pica', 'quality':'q>:B'},
-                 {'genus':'Passer', 'quality':'q>:B'},
-                 {'genus':'Columba', 'quality':'q>:B'},
-                 {'genus':'Turdus', 'quality':'q>:B'},
-                 {'genus':'Coloeus', 'quality':'q>:B'},
-                 {'genus':'Garrulus', 'quality':'q>:B'},
-                 {'genus':'Erithacus', 'quality':'q>:B'},
-                 {'genus':'Sturnus', 'quality':'q>:B'}]
+    queries = [{'genus':'Parus', 'quality':'q_gt:B'},
+                 {'genus':'Picoides', 'quality':'q_gt:B'},
+                 {'genus':'Pica', 'quality':'q_gt:B'},
+                 {'genus':'Passer', 'quality':'q_gt:B'},
+                 {'genus':'Columba', 'quality':'q_gt:B'},
+                 {'genus':'Turdus', 'quality':'q_gt:B'},
+                 {'genus':'Coloeus', 'quality':'q_gt:B'},
+                 {'genus':'Garrulus', 'quality':'q_gt:B'},
+                 {'genus':'Erithacus', 'quality':'q_gt:B'},
+                 {'genus':'Sturnus', 'quality':'q_gt:B'}]
 
     crawler = Crawler(queries)
     crawler.query()
