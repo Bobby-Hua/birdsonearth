@@ -8,3 +8,5 @@ __pycache__/vggish_params.cpython-36.pyc
 *.pyc
 data/
 .ipynb_checkpoints/
+.idea
+.vscode
