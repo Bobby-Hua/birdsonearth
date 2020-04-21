@@ -10,6 +10,8 @@ import os
 import scipy.misc
 from utils import vggish_input
 
+import multiprocessing as mp
+
 
 class Crawler:
     '''
@@ -149,6 +151,29 @@ class Crawler:
                             for gen in summary['labels']]
         return summary
 
+    def download_helper(self, item):
+        index, row = item
+        label = str(row.gen)
+        url = 'http:' + row.file
+        path = os.path.join(self.root, label)
+        mp3_file = os.path.join(path, '{}.mp3'.format(str(row.id)))
+        wav_file = os.path.join(path, '{}.wav'.format(str(row.id)))
+
+        if os.path.exists(wav_file) or os.path.exists(mp3_file):
+            print(f"skipping {url}. file already downloaded.")
+        else:
+            print(f"downloading {url} to {mp3_file}")
+            r = requests.get(url, timeout=60)
+            open(mp3_file, 'wb').write(r.content)
+
+            if self.convert_to_wav:
+                y, sr = load(mp3_file)
+                y *= 32768
+                y = y.astype(np.int16)
+                wavfile.write(wav_file, rate=22050, data=y)
+            if not self.keep_mp3:
+                os.remove(mp3_file)
+
 
     def download(self, save_to=None):
         '''
@@ -171,6 +196,11 @@ class Crawler:
             new_dir = os.path.join(self.root, label)
             if not os.path.exists(new_dir):
                 os.makedirs(new_dir)
+
+        if self.max is None:
+            with mp.Pool(processes=2) as pool:
+                pool.map(self.download_helper, self.df.iterrows())
+
         for index, row in self.df.iterrows():
             label = str(row.gen)
             if self.max is not None:
