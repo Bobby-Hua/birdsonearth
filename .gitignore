@@ -3,7 +3,6 @@
 __pycache__/params.cpython-36.pyc
 __pycache__/VGGish_model.cpython-36.pyc
 __pycache__/vggish_params.cpython-36.pyc
-.DS_Store
 *.wav
 *.pyc
 data/
