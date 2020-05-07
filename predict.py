@@ -78,21 +78,27 @@ def predict(net, labels, files, params):
     predictions = []
     probs = []
     for i, file in enumerate(files):
-        processed = file.split('.')[0] + '_proc.wav'
+        filename = os.path.splitext(os.path.basename(file))[0]
+        processed = filename + '_proc.wav'
         pre.preprocess(file, processed)
         data = vggish_input.wavfile_to_examples(processed)
         data = torch.from_numpy(data).unsqueeze(1).float()
         data = data.to(device)
         net.to(device)
         out = net(data)
+        # for each spectrogram/row index of max probability
+        pred = np.argmax(out.detach().cpu().numpy(), axis=1)
+        # find most frequent index over all spectrograms
+        consensus = np.bincount(pred).argmax()
+        print('file {} sounds like a {} to me'.format(i, labels[consensus]))
+        # mean probabilities for each col/class over all spectrograms
         mean_probs = np.mean(out.detach().cpu().numpy(), axis=0)
-        pred = out.argmax(1).float()
-        consensus = torch.round(torch.mean(pred))
-        consensus = int(np.round(consensus.cpu().numpy()))
-        print('file {} sound like a {} to me'.format(i, labels[consensus]))
+        # find index of max mean_probs
+        idx = np.argmax(mean_probs)
+        #print('file {} sounds like a {} to me'.format(i, labels[idx]))
         print('my guesses are: ')
-        for i, label in enumerate(labels):
-            print('{0}: {1:.04f}'.format(label, mean_probs[i]))
+        for j, label in enumerate(labels):
+            print('{0}: {1:.04f}'.format(label, mean_probs[j]))
         predictions.append(labels[consensus])
         probs.append(mean_probs)
         os.remove(processed)
