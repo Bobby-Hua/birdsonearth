@@ -72,7 +72,7 @@ def load_model_with(params):
     return net, labels
 
 
-def predict(net, labels, files, params):
+def predict(net, files, params):
     print('starting inference')
     device = torch.device(params.device)
     predictions = []
@@ -84,24 +84,21 @@ def predict(net, labels, files, params):
         data = torch.from_numpy(data).unsqueeze(1).float()
         data = data.to(device)
         net.to(device)
-        out = net(data)
+        out = net(data)ß
         mean_probs = np.mean(out.detach().cpu().numpy(), axis=0)
-        pred = out.argmax(1).float()
-        consensus = torch.round(torch.mean(pred))
-        consensus = int(np.round(consensus.cpu().numpy()))
-        print('file {} sound like a {} to me'.format(i, labels[consensus]))
-        print('my guesses are: ')
-        for i, label in enumerate(labels):
-            print('{0}: {1:.04f}'.format(label, mean_probs[i]))
-        predictions.append(labels[consensus])
+        pred = torch.argmax(mean_probs, axis=0)
+        predictions.append(pred)
         probs.append(mean_probs)
-        os.remove(processed)
     return predictions, probs
 
 
 if __name__ == '__main__':
 
+    #TODO: make one method to handle file loading and looping
+    # and one that does inference
     params = p.Params()
     params, files = prepare(params)
     net, labels = load_model_with(params)
-    _ = predict(net, labels, files, params)
+    preds, probs = predict(net, files, params)
+    for pred in preds:
+        print(labels[pred])
