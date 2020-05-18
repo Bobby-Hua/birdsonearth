@@ -1,16 +1,13 @@
 import sys, getopt
 import imp
-import params as p
-import VGGish_model as m
 import torch
 import os
 import pickle
 import numpy as np
 
 from utils import vggish_input
-from utils import preprocessing as pre
-from utils import Dataset as d
-from utils import trainer as t
+from old import preprocessing as pre, Dataset as d
+from core import trainer as t, VGGish_model as m, params as p
 
 imp.reload(p)
 imp.reload(d)

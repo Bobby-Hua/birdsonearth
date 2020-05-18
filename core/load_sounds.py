@@ -40,12 +40,10 @@ class SoundLoader:
         return mels
 
     @classmethod
-    def make_log_mels_from_root(cls, path, sampling_rate, n_mels, fft_window, hop_length, n_max=None):
+    def make_log_mels_for_classes(cls, path, classes, sampling_rate, n_mels, fft_window, hop_length):
         assert os.path.isdir(path)
         all_mels = {}
-        for i, d in tqdm(enumerate(os.listdir(path))):
-            if n_max is not None and i >= n_max:
-                break
+        for i, d in tqdm(enumerate(classes)):
             if not os.path.isdir(join(path, d)):
                 continue
             recordings = cls.load_sounds_from_dir(join(path, d))
@@ -57,4 +55,13 @@ class SoundLoader:
                 hop_length
             )
             all_mels[d] = mels
+        return all_mels
+
+    @classmethod
+    def make_log_mels_from_root(cls, path, sampling_rate, n_mels, fft_window, hop_length, n_max=None):
+        assert os.path.isdir(path)
+        classes = [d for d in os.listdir(path) if os.path.isdir(join(path, d))]
+        if n_max is not None and len(classes) > n_classes:
+            classes = classes[:n_max]
+        mels = cls.make_log_mels_for_classes(path, classes, sampling_rate, n_mels, fft_window, hop_length)
         return all_mels

@@ -33,11 +33,11 @@ class Params:
         # otherwise mel specs are computed from data_root
         self.mel_spec_root = '../data/full_urbansounds_specs'
         self.n_max = None
-        self.weights = 'models/vggish_audioset_weights_without_fc2.h5'
+        self.weights = 'weights/vggish_audioset_weights_without_fc2.h5'
 
         # model zoo
         self.save_model = True
-        self.model_zoo = 'models'
+        self.model_zoo = 'weights'
         self.name = 'urban'
 
         # computing device, can be 'cuda:<GPU index>' or 'cpu'

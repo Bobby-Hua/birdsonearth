@@ -1,20 +1,10 @@
 import sys, getopt
-import imp
-import params as p
-import VGGish_model as m
 import torch
 import pickle
 import os
 
-from utils import Dataset as d
-from utils import trainer as t
-from utils import preprocessing as pre
-
-imp.reload(p)
-imp.reload(d)
-imp.reload(m)
-imp.reload(t)
-imp.reload(pre)
+from core import trainer as t, VGGish_model as m, params as p
+from old import preprocessing as pre, Dataset as d
 
 
 def prepare(params):
@@ -84,11 +74,9 @@ def start_training_with(params):
     criterion = torch.nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(net.parameters())
     trainer = t.Trainer(net, dataset, criterion, optimizer, params, device)
-
     # starting training
     print('start training on {} for {} epochs'.format(device, params.n_epochs))
     trainer.run_training()
-
     # saving model weights and class labels
     if params.save_model:
         print('saving weights and class labels')
@@ -96,7 +84,24 @@ def start_training_with(params):
         print(dataset.labels)
         with open(os.path.join(params.model_zoo, params.name+'.pkl'), 'wb') as f:
             pickle.dump(dataset.labels, f)
+    return net, dataset.labels
 
+
+def train_from_scratch(params, mels):
+    dataset = MelDataset(mels, params.n_frames)
+    net = model.VGGish(params)
+    device = torch.device(params.device)
+    net.to(device)
+    criterion = torch.nn.CrossEntropyLoss()
+    optimizer = torch.optim.Adam(net.parameters())
+    trainer = train.Trainer(
+        params=params,
+        model=net,
+        dataset=dataset,
+        criterion=criterion,
+        optimizer=optimizer
+    )
+    trainer.run_training()
     return net, dataset.labels
 
 

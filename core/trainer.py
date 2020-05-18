@@ -1,30 +1,12 @@
-import imp
-import math
-import torch
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import DataLoader
 from torch.utils.data.sampler import SubsetRandomSampler
-from torch.autograd import Variable
-import torch.optim as optim
-import torch.nn as nn
-import os
 import numpy as np
-
-from utils import Dataset as d
-import VGGish_model as m
-import params as p
-
-
-imp.reload(m)
-imp.reload(d)
-imp.reload(p)
-
+import torch
 
 class Trainer():
     '''
     class to provide framework for training a network.
-
     Attributes:
-        TRAINING
         n_epochs (int): number of epochs of training
         model (nn.Module instance): model to be trained
         dataset (instance of DataSet subclass): to handle data
@@ -36,10 +18,9 @@ class Trainer():
         save_params (string): path to where
     '''
 
-    def __init__(self, model, dataset, criterion, optimizer, params, device):
+    def __init__(self, params, model, dataset, criterion, optimizer):
         '''
         initializes training from a parameter class object
-
         Args:
             model (nn.Module subclass instance): model to be training
             dataset (DataSet subclass instance): providing data
@@ -47,24 +28,19 @@ class Trainer():
             optimizer (nn.optim instance): optimizer for model parameters
             params (params class instance): providing all relevant parameters
         '''
-
         self.model = model
-
         # training
         self.n_epochs = params.n_epochs
         self.optimizer = optimizer
         self.criterion = criterion
         self.batch_size = params.batch_size
-        self.device = device
-
+        self.device = torch.device(params.device)
         # data loading
         self.dataset = dataset
         self.val_split = params.val_split
         self._init_dataloaders()
-
         # state
         self.current_epoch = 0
-
         # stats
         self.train_loss = []
         self.test_loss = []
