@@ -22,7 +22,7 @@ class SoundLoader:
     def load_sounds_from_dir(path):
         assert os.path.isdir(path)
         recordings = []
-        for file in os.listdir(path):
+        for file in sorted(os.listdir(path)):
             a, _ = librosa.core.load(join(path, file))
             recordings.append(a)
         return recordings
@@ -35,7 +35,7 @@ class SoundLoader:
                 n_fft=fft_window,
                 hop_length=hop_length,
                 n_mels=n_mels
-               )) for rec in recordings
+               ))  for rec in recordings
         ]
         return mels
 

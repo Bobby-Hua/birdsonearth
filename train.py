@@ -110,10 +110,9 @@ def train_from_scratch(params, mels):
 
 if __name__ == '__main__':
 
-
-
     params_path = 'core/params.yml'
-    data_root = '/Users/lucasmoeller/Documents/Birds/datasets/ESC-50/'
+    # data_root = '/Users/lucasmoeller/Documents/Birds/datasets/ESC-50/'
+    data_root = '/hdd/sounds/ESC-50/'
     classes = ['101 - Dog', '102 - Rooster', '103 - Pig', '104 - Cow', '105 - Frog']
 
     # loading params file
@@ -132,7 +131,3 @@ if __name__ == '__main__':
     breakpoint()
 
     net, labels = train_from_scratch(params.training, all_mels)
-
-
-
-
