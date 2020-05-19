@@ -3,9 +3,12 @@ import torch
 import pickle
 import os
 
-from core import trainer as t, VGGish_model as m, params as p
 from old import preprocessing as pre, Dataset as d
-
+from utils.params import load_params
+from core.mel_dataset import MelDataset
+from core.load_sounds import SoundLoader
+from core.trainer import Trainer
+from core.VGGish_model import VGGish
 
 def prepare(params):
     '''
@@ -89,12 +92,12 @@ def start_training_with(params):
 
 def train_from_scratch(params, mels):
     dataset = MelDataset(mels, params.n_frames)
-    net = model.VGGish(params)
+    net = VGGish(params)
     device = torch.device(params.device)
     net.to(device)
     criterion = torch.nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(net.parameters())
-    trainer = train.Trainer(
+    trainer = Trainer(
         params=params,
         model=net,
         dataset=dataset,
@@ -107,7 +110,29 @@ def train_from_scratch(params, mels):
 
 if __name__ == '__main__':
 
-    params = p.Params()
-    params = prepare(params)
-    _, _ = start_training_with(params)
-    print('done')
+
+
+    params_path = 'core/params.yml'
+    data_root = '/Users/lucasmoeller/Documents/Birds/datasets/ESC-50/'
+    classes = ['101 - Dog', '102 - Rooster', '103 - Pig', '104 - Cow', '105 - Frog']
+
+    # loading params file
+    params = load_params(params_path)
+
+    #
+    all_mels = SoundLoader.make_log_mels_for_classes(
+        data_root,
+        classes,
+        sampling_rate=params.specs.sampling_rate,
+        n_mels = params.specs.n_mels,
+        fft_window=params.specs.n_mels,
+        hop_length=params.specs.hop_length
+    )
+
+    breakpoint()
+
+    net, labels = train_from_scratch(params.training, all_mels)
+
+
+
+

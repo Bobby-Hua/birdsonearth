@@ -1,0 +1,14 @@
+specs:
+  sampling_rate : 44100
+  n_mels : 64
+  fft_window : 2048
+  hop_length : 512
+
+training:
+  device : 'cuda:0'
+  n_classes : 5
+  n_bins : 64
+  n_frames : 96
+  n_epochs : 100
+  batch_size : 50
+  val_split : .2
