@@ -3,6 +3,7 @@ specs:
   n_mels : 64
   fft_window : 2048
   hop_length : 512
+  epsilon : .00001
 
 training:
   device : 'cuda:0'
