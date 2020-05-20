@@ -23,7 +23,7 @@ class SoundLoader:
     def load_sounds_from_dir(path):
         assert os.path.isdir(path)
         recordings = []
-        for file in os.listdir(path):
+        for file in sorted(os.listdir(path)):
             a, _ = librosa.core.load(join(path, file))
             recordings.append(a)
         return recordings
@@ -107,6 +107,3 @@ if __name__ == '__main__':
         )
 
     SoundLoader.save_mels(all_mels, '../datasets/melspecs')
-
-
-
