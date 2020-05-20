@@ -10,6 +10,7 @@ from librosa.feature import melspectrogram as melspec
 from tqdm import tqdm
 import warnings
 import random
+import pickle
 warnings.filterwarnings('ignore')
 
 
@@ -92,20 +93,20 @@ if __name__ == '__main__':
 
     from utils.params import load_params
     params = load_params('core/params.yml')
-    data_root = '/hdd/sounds/ESC-50'
-    classes = ['101 - Dog', '102 - Rooster']#, '103 - Pig', '104 - Cow', '105 - Frog']
+    data_root = '../datasets/ESC-50'
+    classes = ['101 - Dog', '102 - Rooster', '103 - Pig', '104 - Cow', '105 - Frog']
 
     all_mels = SoundLoader.make_log_mels_for_classes(
         path=data_root,
         classes=classes,
         sampling_rate=params.specs.sampling_rate,
         n_mels=params.specs.n_mels,
-        fft_window=params.specs.ft_windows,
+        fft_window=params.specs.fft_window,
         hop_length=params.specs.hop_length,
         epsilon=params.specs.epsilon
-        n_max=5)
+        )
 
-    SoundLoader.save_mels(all_mels, '/hdd/sounds/melspecs')
+    SoundLoader.save_mels(all_mels, '../datasets/melspecs')
 
 
 

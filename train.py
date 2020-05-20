@@ -129,9 +129,10 @@ if __name__ == '__main__':
         hop_length=params.specs.hop_length
     )
 
-    breakpoint()
-
     net, labels = train_from_scratch(params.training, all_mels)
+
+    net.save_weights('../env_weights.pt')
+
 
 
 

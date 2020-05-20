@@ -1,23 +1,19 @@
 import sys, getopt
-import imp
 import torch
 import os
 import pickle
 import numpy as np
 
 from utils import vggish_input
-from old import preprocessing as pre, Dataset as d
-from core import trainer as t, VGGish_model as m, params as p
 
-imp.reload(p)
-imp.reload(d)
-imp.reload(m)
-imp.reload(t)
-imp.reload(pre)
+from core.VGGish_model import VGGish
+from utils.params import load_params
+from core.load_sounds import SoundLoader
 
 
 def prepare(params):
     '''
+    DEPRECATED
     reads in a terminal command of the form:
 
     $ python predict.py <file path 1> <file path 2> ...
@@ -81,7 +77,7 @@ def predict(net, files, params):
         data = torch.from_numpy(data).unsqueeze(1).float()
         data = data.to(device)
         net.to(device)
-        out = net(data)ß
+        out = net(data)
         mean_probs = np.mean(out.detach().cpu().numpy(), axis=0)
         pred = torch.argmax(mean_probs, axis=0)
         predictions.append(pred)
@@ -91,11 +87,20 @@ def predict(net, files, params):
 
 if __name__ == '__main__':
 
-    #TODO: make one method to handle file loading and looping
-    # and one that does inference
-    params = p.Params()
-    params, files = prepare(params)
-    net, labels = load_model_with(params)
-    preds, probs = predict(net, files, params)
-    for pred in preds:
-        print(labels[pred])
+    params_dir = 'core/params.yml'
+    mel_dir = '../datasets/melspecs'
+    classes = ['101 - Dog']#, '102 - Rooster', '103 - Pig', '104 - Cow', '105 - Frog']
+
+    params = load_params(params_dir)
+    net = VGGish(params.training)
+
+    mels = SoundLoader.load_mels(mel_dir, classes)
+    some_mel = mels['101 - Dog'][1]
+    some_mel = torch.from_numpy(some_mel)
+    some_mel = some_mel[:, :96].unsqueeze(0).unsqueeze(0).float()
+    breakpoint()
+
+    out = net(some_mel[:, :96])
+    print(out)
+
+
