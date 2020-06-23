@@ -86,20 +86,21 @@ def predict(net, labels, files, params):
         data = data.to(device)
         net.to(device)
         out = net(data)
-        # for each spectrogram/row index of max probability
-        pred = np.argmax(out.detach().cpu().numpy(), axis=1)
-        # find most frequent index over all spectrograms
-        consensus = np.bincount(pred).argmax()
-        print('file {} sounds like a {} to me'.format(i, labels[consensus]))
+        # # for each spectrogram/row index of max probability
+        # pred = np.argmax(out.detach().cpu().numpy(), axis=1)
+        # # find most frequent index over all spectrograms
+        # consensus = np.bincount(pred).argmax()
+        # print('file {} sounds like a {} to me'.format(i, labels[consensus]))
         # mean probabilities for each col/class over all spectrograms
         mean_probs = np.mean(out.detach().cpu().numpy(), axis=0)
         # find index of max mean_probs
         idx = np.argmax(mean_probs)
-        #print('file {} sounds like a {} to me'.format(i, labels[idx]))
+        print('file {} sounds like a {} to me'.format(i, labels[idx]))
         print('my guesses are: ')
         for j, label in enumerate(labels):
             print('{0}: {1:.04f}'.format(label, mean_probs[j]))
-        predictions.append(labels[consensus])
+        # predictions.append(labels[consensus])
+        predictions.append(labels[idx])
         probs.append(mean_probs)
         os.remove(processed)
     return predictions, probs
